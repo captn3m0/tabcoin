@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "tabcoin is a ruby client for the CoinTab API"
   spec.description   = "tabcoin is a ruby client for the CoinTab API. It makes requests to the cointab API servers."
   spec.homepage      = "https://github.com/captn3m0/tabcoin"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.6.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "minitest/autorun"
 require "tabcoin/client"
 
@@ -16,9 +17,14 @@ class TestClient < Minitest::Test
   end
 
   def test_body
-    body = @c.body({
-      :AccountType => "noidea"
-    })
-    assert_equal body, {"f29"=> "noidea"}.to_json
+    body = @c.body(
+      AccountType: "noidea"
+    )
+    assert_equal body, { "f29" => "noidea" }.to_json
   end
+
+  # Commented out, since we don't have mocks
+  # def test_register_device
+  #   pp @c.RegisterDevice
+  # end
 end

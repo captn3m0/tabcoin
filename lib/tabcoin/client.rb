@@ -13,7 +13,7 @@ module Tabcoin
     attr_writer :device_id
 
     # Generates default headers, and merges custom ones
-    def headers(h)
+    def headers(h = {})
       # Default Headers + Custom headers
       {
         Util.header_key(:App_uuid) => Constants::APP_UUID,
@@ -23,19 +23,19 @@ module Tabcoin
     end
 
     # Takes the body hash, generates proper request from it, and converts it to JSON
-    def body(h)
+    def body(h = {})
       Util.gen_request(h).to_json
     end
 
-    def self.r(*args)
-      self.class.post(*args)
-      # TODO: Parse response and return it correctly
+    def request(...)
+      res = self.class.post(...).body
+      Util.parse_response JSON.parse(res)
     end
 
     # Initiates device registration
     def RegisterDevice
-      self.class.r(
-        "RegisterDevice/#{Constants::API_VERSION}/",
+      request(
+        "/RegisterDevice/#{Constants::API_VERSION}/",
         body: body(DeviceInfo1: @device_id),
         headers: headers
       )
