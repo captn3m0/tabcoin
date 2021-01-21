@@ -2,7 +2,7 @@
 
 module Tabcoin
   class Constants
-    APP_UUID = "3B8DF70B1FB5462482701178C392BE74"
+    APP_UUID = "DD0EF473F08F43B2B4AF496D73320719"
     API_VERSION = "1.0"
     # One-indexed, take care
     HEADERS = [
