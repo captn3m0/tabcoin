@@ -129,7 +129,15 @@ module Tabcoin
       "f95" => :TransactionRefID,
       "f96" => :TransactionMinimumAmount,
       "f97" => :TransactionRefUrl,
-      "f98" => :IsPay
+      "f98" => :IsPay,
+
+      # Some responses contain headers
+      "h1" => :App_uuid,
+      "h2" => :Api_uuid,
+      "h3" => :Device_uuid,
+      "h4" => :User_uuid,
+      "h5" => :APK_Digest,
+      "h6" => :APK_ChkSum
     }.freeze
   end
 end

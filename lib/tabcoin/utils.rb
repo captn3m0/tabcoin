@@ -22,10 +22,10 @@ module Tabcoin
     end
 
     # Parses the response against the fieldmap
-    def parse_response(res)
+    def self.parse_response(res)
       ress = {}
       res.each_key do |k|
-        ress[Constants::FIELDMAP[k]] = res.delete[k]
+        ress[Constants::FIELDMAP[k]] = res[k]
       end
       ress
     end
