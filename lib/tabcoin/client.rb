@@ -5,7 +5,7 @@ require "json"
 
 module Tabcoin
   # Base class for making requests
-  class Request
+  class Client
     include HTTParty
     format :json
     base_uri "https://app.cointab.in:52270/sdk"

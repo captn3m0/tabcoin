@@ -12,20 +12,22 @@ module Tabcoin
     end
 
     # Generates request as per our fieldmap
-    def gen_request(h)
+    def self.gen_request(h)
       fields = Constants::FIELDMAP.invert
+      hh = {}
       h.each_key do |k|
-        h[fields[k]] = h.delete k
+        hh[fields[k]] = h[k]
       end
-      h
+      hh
     end
 
     # Parses the response against the fieldmap
     def parse_response(res)
+      ress = {}
       res.each_key do |k|
-        res[Constants::FIELDMAP[k]] = res.delete[k]
+        ress[Constants::FIELDMAP[k]] = res.delete[k]
       end
-      res
+      ress
     end
 
     # NPCI-style UUIDs

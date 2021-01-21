@@ -2,7 +2,7 @@
 
 require "minitest/autorun"
 require "tabcoin/utils"
-require "tabcoin/request"
+require "tabcoin/client"
 
 class TestConstants < Minitest::Test
   def test_headers
@@ -19,14 +19,25 @@ end
 
 class TestRequest < Minitest::Test
   def setup
-    @r = Tabcoin::Request.new
-    @r.device_id = "SAMPLEID"
+    @c = Tabcoin::Client.new
+    @c.device_id = "SAMPLEDEVICEID"
   end
 
   def test_headers
-    h = @r.headers("Sample" => "Value")
+    h = @c.headers("Sample" => "Value")
     assert_equal Tabcoin::Constants::APP_UUID, h["h1"]
     assert_match /[A-F0-9]{32}/, h["h2"]
     assert_equal "application/json", h["Content-Type"]
+  end
+
+  def test_body
+    body = @c.body({
+      :AccountType => "noidea"
+    })
+    assert_equal body, {"f29"=> "noidea"}.to_json
+  end
+
+  def test_register_device
+
   end
 end
