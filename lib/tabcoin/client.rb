@@ -10,21 +10,30 @@ module Tabcoin
     format :json
     base_uri "https://app.cointab.in:52270/sdk"
 
-    attr_writer :device_id
+    attr_writer :device_id, :device_uuid
 
-    # Generates default headers, and merges custom ones
-    def headers(h = {})
+    # Generates default headers, and adds additional from
+    # instance attributes
+    # if being used async, ensure @device_id and @device_uuid are not null
+    def headers
+      h[Util.header_key(:device_uuid)] = @device_uuid unless @device_uuid.nil?
+
       # Default Headers + Custom headers
       {
         Util.header_key(:App_uuid) => Constants::APP_UUID,
         Util.header_key(:Api_uuid) => Util.uuid,
         "Content-Type" => "application/json"
-      }.freeze.merge(h)
+      }.freeze
+    end
+
+    def initialize
+      @device_id = nil
+      @device_uuid = nil
     end
 
     # Takes the body hash, generates proper request from it, and converts it to JSON
-    def body(h = {})
-      Util.gen_request(h).to_json
+    def body(params = {})
+      Util.gen_request(params).to_json
     end
 
     def request(...)
@@ -32,13 +41,34 @@ module Tabcoin
       Util.parse_response JSON.parse(res)
     end
 
-    # Initiates device registration
-    def RegisterDevice
+    def ensure_set(list)
+      list.each do |s|
+        # TODO: Improve this to actually raise with the correct name
+        raise Error.new("Missing parameter for this request") if s.nil?
+      end
+    end
+
+    # Note that sms here is just the verification code
+    # without the prefix
+    def registration_status(sms)
+      ensure_set [@device_id, @device_uuid]
       request(
+        "/StatusUserRegistration/#{Constants::API_VERSION}/",
+        body: body(LanguageID: 1, ConnectionType: "WIFI", SMSVerificationCode: sms),
+        headers: headers
+      )
+    end
+
+    # Initiates device registration
+    def register_device
+      ensure_set [@device_id]
+      body = request(
         "/RegisterDevice/#{Constants::API_VERSION}/",
         body: body(DeviceInfo1: @device_id),
         headers: headers
       )
+      @device_uuid = body[:device_uuid]
+      body
     end
   end
 end

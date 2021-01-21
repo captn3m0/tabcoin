@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Tabcoin
+  # rubocop:disable Metrics/ClassLength
   class Constants
     APP_UUID = "DD0EF473F08F43B2B4AF496D73320719"
     API_VERSION = "1.0"
@@ -11,7 +12,7 @@ module Tabcoin
       # h2
       :Api_uuid,
       # h3
-      :Device_uuid,
+      :device_uuid,
       # h4
       :User_uuid,
       # h5
@@ -134,10 +135,11 @@ module Tabcoin
       # Some responses contain headers
       "h1" => :App_uuid,
       "h2" => :Api_uuid,
-      "h3" => :Device_uuid,
+      "h3" => :device_uuid,
       "h4" => :User_uuid,
       "h5" => :APK_Digest,
       "h6" => :APK_ChkSum
     }.freeze
   end
+  # rubocop:enable Metrics/ClassLength
 end

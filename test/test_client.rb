@@ -2,6 +2,7 @@
 
 require "minitest/autorun"
 require "tabcoin/client"
+require "tabcoin"
 
 class TestClient < Minitest::Test
   def setup
@@ -10,9 +11,9 @@ class TestClient < Minitest::Test
   end
 
   def test_headers
-    h = @c.headers("Sample" => "Value")
+    h = @c.headers
     assert_equal Tabcoin::Constants::APP_UUID, h["h1"]
-    assert_match /[A-F0-9]{32}/, h["h2"]
+    assert_match(/[A-F0-9]{32}/, h["h2"])
     assert_equal "application/json", h["Content-Type"]
   end
 
@@ -23,8 +24,22 @@ class TestClient < Minitest::Test
     assert_equal body, { "f29" => "noidea" }.to_json
   end
 
-  # Commented out, since we don't have mocks
+  def test_ensure
+    assert_raises(Tabcoin::Error) do
+      @c.registration_status("123")
+    end
+  end
+
+  # Commented out, since we don't have mocks yet
   # def test_register_device
-  #   pp @c.RegisterDevice
+  #   pp @c.register_device
   # end
+  # Sample response:
+  #  {:ResponseCode=>"1",
+  # :Device_uuid=>"",
+  # :SMSVerificationCode=> "",
+  # :MobileNumber=>"+",
+  # :SMSKeyword=>""}
+  # The SMS is $SMSKeyword [SPACE] $SMSVerificationCode
+  # and it needs to be sent to $MobileNumber
 end

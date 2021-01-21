@@ -12,13 +12,13 @@ module Tabcoin
     end
 
     # Generates request as per our fieldmap
-    def self.gen_request(h)
+    def self.gen_request(params)
       fields = Constants::FIELDMAP.invert
-      hh = {}
-      h.each_key do |k|
-        hh[fields[k]] = h[k]
+      req = {}
+      params.each_key do |k|
+        req[fields[k]] = params[k]
       end
-      hh
+      req
     end
 
     # Parses the response against the fieldmap

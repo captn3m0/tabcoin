@@ -6,7 +6,7 @@ require "tabcoin/utils"
 class TestUtil < Minitest::Test
   def test_uuid
     assert_equal 32, Tabcoin::Util.uuid.length
-    assert_match /[A-F0-9]{32}/, Tabcoin::Util.uuid
+    assert_match(/[A-F0-9]{32}/, Tabcoin::Util.uuid)
   end
 
   def test_response_parsing
@@ -19,7 +19,7 @@ class TestUtil < Minitest::Test
     )
     assert_equal res,
                  ResponseCode: "1",
-                 Device_uuid: "ABC",
+                 device_uuid: "ABC",
                  SMSVerificationCode: "SMS",
                  MobileNumber: "XYZ",
                  SMSKeyword: "upi"
