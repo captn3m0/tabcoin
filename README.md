@@ -1,8 +1,6 @@
 # Tabcoin
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tabcoin`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Tabcoin is a rubygem for the Cointab API
 
 ## Installation
 
@@ -20,9 +18,11 @@ Or install it yourself as:
 
     $ gem install tabcoin
 
-## Usage
+## Features
 
-TODO: Write usage instructions here
+- Supports signing up for the Cointab application programmatically
+- Exposes the SMS message and mobile number, so you can send the SMS for device authentication
+- Lets you send collect requests, and validate VPAs easily.
 
 ## Development
 
