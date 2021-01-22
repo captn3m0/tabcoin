@@ -3,6 +3,9 @@
 require "httparty"
 require "json"
 
+require_relative "constants"
+require_relative "utils"
+
 module Tabcoin
   # Base class for making requests
   class Client
@@ -10,20 +13,20 @@ module Tabcoin
     format :json
     base_uri "https://app.cointab.in:52270/sdk"
 
-    attr_writer :device_id, :device_uuid
+    attr_accessor :device_id, :device_uuid
 
     # Generates default headers, and adds additional from
     # instance attributes
     # if being used async, ensure @device_id and @device_uuid are not null
     def headers
-      h[Util.header_key(:device_uuid)] = @device_uuid unless @device_uuid.nil?
-
       # Default Headers + Custom headers
-      {
+      h = {
         Util.header_key(:App_uuid) => Constants::APP_UUID,
         Util.header_key(:Api_uuid) => Util.uuid,
         "Content-Type" => "application/json"
-      }.freeze
+      }
+      h[Util.header_key(:device_uuid)] = @device_uuid unless @device_uuid.nil?
+      h
     end
 
     def initialize
@@ -44,7 +47,7 @@ module Tabcoin
     def ensure_set(list)
       list.each do |s|
         # TODO: Improve this to actually raise with the correct name
-        raise Error.new("Missing parameter for this request") if s.nil?
+        raise Error, "Missing parameter for this request" if s.nil?
       end
     end
 
@@ -60,11 +63,11 @@ module Tabcoin
     end
 
     # Initiates device registration
-    def register_device
+    def register_device(params)
       ensure_set [@device_id]
       body = request(
         "/RegisterDevice/#{Constants::API_VERSION}/",
-        body: body(DeviceInfo1: @device_id),
+        body: body({ DeviceInfo1: @device_id }.merge(params)),
         headers: headers
       )
       @device_uuid = body[:device_uuid]
