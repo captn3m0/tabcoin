@@ -11,9 +11,9 @@ module Tabcoin
   class Client
     include HTTParty
     format :json
-    base_uri "https://app.cointab.in:52270/sdk"
+    base_uri "https://app.cointab.in:52270"
 
-    attr_accessor :device_id, :device_uuid
+    attr_accessor :device_id, :device_uuid, :user_uuid, :account_code
 
     # Generates default headers, and adds additional from
     # instance attributes
@@ -21,11 +21,13 @@ module Tabcoin
     def headers
       # Default Headers + Custom headers
       h = {
-        Util.header_key(:App_uuid) => Constants::APP_UUID,
-        Util.header_key(:Api_uuid) => Util.uuid,
+        Util.header_key(:app_uuid) => Constants::APP_UUID,
+        Util.header_key(:api_uuid) => Util.uuid,
         "Content-Type" => "application/json"
       }
+      # h3 and h4
       h[Util.header_key(:device_uuid)] = @device_uuid unless @device_uuid.nil?
+      h[Util.header_key(:user_uuid)] = @user_uuid unless @user_uuid.nil?
       h
     end
 
@@ -54,24 +56,79 @@ module Tabcoin
     # Note that sms here is just the verification code
     # without the prefix
     def registration_status(sms)
-      ensure_set [@device_id, @device_uuid]
-      request(
-        "/StatusUserRegistration/#{Constants::API_VERSION}/",
+      ensure_set [@device_uuid]
+      body = request(
+        "/sdk/StatusUserRegistration/#{Constants::API_VERSION}/",
         body: body(LanguageID: 1, ConnectionType: "WIFI", SMSVerificationCode: sms),
         headers: headers
       )
+      @user_uuid = body[:user_uuid] if body[:user_uuid]
+      body
     end
 
     # Initiates device registration
     def register_device(params)
       ensure_set [@device_id]
       body = request(
-        "/RegisterDevice/#{Constants::API_VERSION}/",
+        "/sdk/RegisterDevice/#{Constants::API_VERSION}/",
         body: body({ DeviceInfo1: @device_id }.merge(params)),
         headers: headers
       )
       @device_uuid = body[:device_uuid]
       body
+    end
+
+    def check_vpa(vpa)
+      ensure_auth
+      res = request(
+        "/sdk/CheckVPA/#{Constants::API_VERSION}/",
+        body: body({VPA:vpa}),
+        headers: headers
+      )
+
+      sleep 0.5
+      request(
+        "/sdk/StatusCheckVPA/#{Constants::API_VERSION}/",
+        body: body({APICode:res[:APICode]}),
+        headers: headers
+      )
+    end
+
+    def ensure_auth
+      ensure_set [@device_uuid, @user_uuid]
+    end
+
+    def txn_history
+      ensure_auth
+      res = request(
+        "/api/TransactionHistory/#{Constants::API_VERSION}/",
+        body: body({SkipTransactions:[]}),
+        headers: headers
+      )
+
+      res[:Transactions].map! do |txn|
+        Util.parse_response(txn)
+      end
+      res
+    end
+
+    # Raise collect request
+    def collect_request(vpa, amount, description, expiry = 5)
+      ensure_auth
+      ensure_set [@account_code]
+      params = {
+        AccountCode: @account_code,
+        ActivityUUID: Util.uuid,
+        Amount: amount,
+        Description: description,
+        ExpiringIn: expiry,
+        VPA: vpa
+      }
+      request(
+        "/sdk/CollectVPA/#{Constants::API_VERSION}/",
+        body: body(params),
+        headers: headers
+      )
     end
   end
 end

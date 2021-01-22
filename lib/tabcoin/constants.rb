@@ -3,18 +3,18 @@
 module Tabcoin
   # rubocop:disable Metrics/ClassLength
   class Constants
-    APP_UUID = "DD0EF473F08F43B2B4AF496D73320719"
+    APP_UUID = "BF9ECC49507140C99F29782668B5E6CD"
     API_VERSION = "1.0"
     # One-indexed, take care
     HEADERS = [
       # h1
-      :App_uuid,
+      :app_uuid,
       # h2
-      :Api_uuid,
+      :api_uuid,
       # h3
       :device_uuid,
       # h4
-      :User_uuid,
+      :user_uuid,
       # h5
       :APK_Digest,
       # h6, never used afaik
@@ -131,12 +131,21 @@ module Tabcoin
       "f96" => :TransactionMinimumAmount,
       "f97" => :TransactionRefUrl,
       "f98" => :IsPay,
+      "f273" => :Unknown,
+      "f117" => :SkipTransactions,
+      "f104" => :Transactions,
+      "f156" => :TransactionCount,
+      "f100" => :VPA2,
+      "f116" => :DateTime,
+      "f102" => :DateTime,
+      "f101" => :PayerName,
+      "f99" => :TxnType,
 
       # Some responses contain headers
-      "h1" => :App_uuid,
-      "h2" => :Api_uuid,
+      "h1" => :app_uuid,
+      "h2" => :api_uuid,
       "h3" => :device_uuid,
-      "h4" => :User_uuid,
+      "h4" => :user_uuid,
       "h5" => :APK_Digest,
       "h6" => :APK_ChkSum
     }.freeze
