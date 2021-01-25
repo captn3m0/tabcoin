@@ -82,14 +82,14 @@ module Tabcoin
       ensure_auth
       res = request(
         "/sdk/CheckVPA/#{Constants::API_VERSION}/",
-        body: body({VPA:vpa}),
+        body: body(VPA: vpa),
         headers: headers
       )
 
       sleep 0.5
       request(
         "/sdk/StatusCheckVPA/#{Constants::API_VERSION}/",
-        body: body({APICode:res[:APICode]}),
+        body: body(APICode: res[:APICode]),
         headers: headers
       )
     end
@@ -102,7 +102,7 @@ module Tabcoin
       ensure_auth
       res = request(
         "/api/TransactionHistory/#{Constants::API_VERSION}/",
-        body: body({SkipTransactions:[]}),
+        body: body(SkipTransactions: []),
         headers: headers
       )
 
